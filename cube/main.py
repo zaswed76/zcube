@@ -1,5 +1,5 @@
 
-__version__ = "0.1.14"
+__version__ = "0.1.15"
 
 from kivy.lang import Builder
 from kivy.storage.jsonstore import JsonStore

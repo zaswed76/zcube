@@ -1,0 +1,46 @@
+#:include kv/games.kv
+#:include kv/settings.kv
+#:include kv/viewcube.kv
+#:include kv/imageviewgrid.kv
+#:import utils kivy.utils
+<RoundFlatButton@MDFillRoundFlatButton>:
+    size_hint: 0.8, 0.1
+    pos_hint: {'center_x': .5}
+    font_size: '14sp'
+    color: 0, 0.5, 1, 1
+    halign: 'left'
+    valign: 'center'
+#    background_color: 0, 0.7, 0.9, 1
+
+<MenuScreen>:
+    canvas.before:
+        Color:
+            rgb: utils.get_color_from_hex('#02131a')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        padding: [20, 20, 20, 20]
+        spacing: 50
+#        size_hint: 1, 1
+        orientation: 'vertical'
+        RoundFlatButton:
+            text: 'Игры'
+            on_press: root.manager.current = 'games'
+
+        RoundFlatButton:
+            text: 'Галерея'
+            on_press: root.manager.current = 'imageviewgrid'
+
+        RoundFlatButton:
+            text: 'Настройки'
+            on_press: root.manager.current = 'settings'
+
+        RoundFlatButton:
+            text: 'О программе'
+            on_press: root.manager.current = 'settings'
+
+        RoundFlatButton:
+            text: 'Quit'
+            on_press: app.stop()
+

@@ -1,0 +1,27 @@
+#<RoundFlatButton@Button>:
+#    size_hint: 0.8, 0.1
+#    pos_hint: {'center_x': .5}
+#    font_size: '25sp'
+#    background_color: 0, 0.7, 0.9, 1
+
+<GamesScreen>:
+    canvas.before:
+        Color:
+            rgb: utils.get_color_from_hex('#02131a')
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        padding: [20, 20, 20, 20]
+        spacing: 50
+        orientation: 'vertical'
+        RoundFlatButton:
+            text: 'Галерея'
+            on_press: root.manager.current = 'viewcube'
+        RoundFlatButton:
+            text: 'Игра 2'
+        RoundFlatButton:
+            text: 'Игра 3'
+        RoundFlatButton:
+            text: 'Вернуться в меню'
+            on_press: root.manager.current = 'menu'

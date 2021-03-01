@@ -1,0 +1,90 @@
+#:import MDCard kivymd.uix.card.MDCard
+
+
+<ViewCube>:
+    tool_bar: tool_bar
+    FloatLayout:
+#        orientation: 'vertical'
+
+
+        MDToolbar:
+            id: tool_bar
+            pos_hint: {'top':1}
+            size_hint: 1, 0.1
+
+
+
+
+
+            right_action_items: [["home", lambda x: app.viewcube.callback_home(x)]]
+            left_action_items: [["arrow-left-bold-outline", lambda x: app.viewcube.callback_back(x)], ["shuffle", lambda x: app.viewcube.shuffle(x)], ["format-list-bulleted", lambda x: app.viewcube.sort(x)], ["help", lambda x: app.viewcube.hide_help_digit(x)]]
+
+#            MyToggleButton:
+#                pos: 1, 0
+#                size_hint: None, None
+#                size: 100, 100
+#                icon: 'help'
+#                theme_text_color: 'Custom'
+#                elevation: 0
+#                md_bg_color: app.theme_cls.primary_color
+#                on_release: root.ids.screen_manager.current = 'Home'
+
+#            right_action_items: [["dots-vertical", lambda x: app.viewcube.callback_menu(x)]]
+#            MDIconButton:
+#                pos_hint: {'center_y': 0.5}
+#                icon: 'menu'
+#                theme_text_color: 'Custom'
+#                elevation: 0
+##                md_bg_color: app.theme_cls.primary_color
+#                on_release: app.viewcube.callback_menu()
+
+#            right_action_items: [["dots-vertical", lambda x: )]]
+#            ActionView:
+##                use_separator: True
+##                ActionPrevious:
+###                    with_previous:
+#                ActionGroup:
+#                    text: 'Tools'
+#                    mode: 'spinner'
+#                    ActionButton:
+#                        text: 'Tool1'
+#                    ActionButton:
+#                        text: 'Tool2'
+#                    ActionButton:
+#                        text: 'Tool3'
+#                    ActionButton:
+#                        text: 'Tool4'
+#                on_press: root.manager.current = 'menu'
+#            on_action_button: root.parent.callback(x)
+#            MDFloatingActionButton:
+#                icon: 'keyboard-backspace'
+#                theme_text_color: 'Custom'
+#                elevation: 5
+#                on_press: root.manager.current = 'menu'
+#        MDFloatingActionButton:
+
+#            md_bg_color: app.theme_cls.primary_color
+#            on_press: root.manager.current = 'settings'
+#        left_action_items: [["menu", lambda x: self.parent.callback(x)]]
+#        title: str(type(self.parent))
+#
+#        title: "Title"
+#        icon: "git"
+#        type: "bottom"
+#            left_action_items: [["menu", lambda x: x]]
+#            on_action_button: root.manager.current = 'menu'
+
+
+#    Carousel:
+#        direction: 'right'
+#        id: carusel
+#
+#        MDCard:
+#            size_hint: 1, 0.8
+#            pos_hint: {"center_x": .5, "center_y": .5}
+#            AsyncImage:
+#                source: 'http://placehold.it/480x270.png&text=slide-1.png'
+#
+#        MDCard:
+#            size_hint: 1, 0.8
+#            pos_hint: {"center_x": .5, "center_y": .5}

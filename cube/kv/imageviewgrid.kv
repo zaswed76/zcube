@@ -1,0 +1,23 @@
+
+<But@Button>:
+    size_hint: 1, None
+    size: 200, 200
+
+<ImageViewGrid>:
+    image_grid_layout: image_grid_layout
+    BoxLayout:
+        orientation: "vertical"
+        MDToolbar:
+            pos_hint: {'top':1}
+            size_hint: 1, 0.1
+            left_action_items: [["play-outline", lambda x: app.run_view(x)], ["select-group", lambda x: app.select_group(True)], ["select-off", lambda x: app.select_group(False)]]
+            right_action_items: [["home", lambda x: app.viewcube.callback_home(x)]]
+
+        ScrollView:
+
+            MDGridLayout:
+                id: image_grid_layout
+#                cols: 8
+                adaptive_height: True
+                padding: 5, 5, 5, 5
+                spacing: 1

@@ -6,36 +6,48 @@ from kivy.uix.carousel import Carousel
 from kivy.uix.image import AsyncImage, Image
 from kivy.uix.screenmanager import Screen
 from kivymd.app import MDApp
+from kivymd.uix.progressbar import MDProgressBar
 
 
 class MyButton(ButtonBehavior, Image):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.dir_digit = "resources/digit"
+        self.dir_image = "resources/images"
 
-        self._source = self.source
         self.name = None
+        self.image_numeric_flag = None
+
+    def set_source(self):
+        print(self.image_numeric_flag, "333333333333333333333")
+        self.source = "resources/{}/{}.png".format(self.image_numeric_flag, self.name)
 
     def init_help_digit(self):
-        self.box = AnchorLayout()
-        self.add_widget(self.box)
-        img = AsyncImage(source="resources/digit/{}".format(self.convert_name(self.name)))
+        if self.image_numeric_flag == "images":
+            help_dir = self.dir_digit
+        else:
+            help_dir = self.dir_image
+        img = AsyncImage(source="{}/{}.png".format(help_dir, self.name))
         img.size_hint = 1.2, 1.2
-        self.box.add_widget(img)
+        self.add_widget(img)
 
     def on_press(self):
-        path_img = os.path.join(self.dir_digit, self.convert_name(self.name))
+        if self.image_numeric_flag == "images":
+            help_dir = self.dir_digit
+        else:
+            help_dir = self.dir_image
+        path_img = "{}/{}.png".format(help_dir, self.name)
         self.source = path_img
 
-    def convert_name(self, name):
-        if len(self.name) == 1:
-            nameimg = "00" + self.name + ".png"
-        else:
-            nameimg = "0" + self.name + ".png"
-        return nameimg
+
 
     def on_release(self):
-        self.source = self._source
+        if self.image_numeric_flag == "images":
+            help_dir = self.dir_image
+        else:
+            help_dir = self.dir_digit
+        path_img = "{}/{}.png".format(help_dir, self.name)
+        self.source = path_img
 
 
 class MyCarousel(Carousel):
@@ -48,6 +60,7 @@ class ViewCube(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
         self.permanent_help_flag = False
+        self.image_numeric_flag = None
         self.cash_list = []
         self._current_cash = []
 
@@ -58,16 +71,23 @@ class ViewCube(Screen):
         self.carousel.scroll_timeout = 100
         self.carousel.size_hint = 1, 0.9
         self.carousel.min_move = 0.1
-
         self.add_widget(self.carousel)
         self.imge_cash = {}
+        self.progerss = MDProgressBar()
+        self.progerss.value = 0
+        self.progerss.size_hint = 1, 0.2
+        self.progerss.pos_hint = {'center_y': 0.009}
+        self.view_float_box.add_widget(self.progerss)
+            # pos_hint: {'bottom':0}
 
-    def creat_image_btns(self, lst):
+
+    def creat_image_btns(self, lst, image_numeric_flag):
         for i in lst:
             if i not in self.imge_cash:
-                src = f"resources/images/{i}.png"
-                image = MyButton(source=src, allow_stretch=True)
+                image = MyButton()
                 image.name = str(i)
+                image.image_numeric_flag = image_numeric_flag
+                image.set_source()
                 if self.permanent_help_flag:
                     image.init_help_digit()
                 self.imge_cash[i] = image
@@ -97,13 +117,11 @@ class ViewCube(Screen):
         self.manager.current = "imageviewgrid"
 
 
-    def sort(self, v):
-        self.app.seq.sort()
-        self.app.select(self.app.seq.data)
+
 
     def hide_help_digit(self, v):
         if self.permanent_help_flag:
-            for c in self.imge_cash.values():
+            for c in self.carousel.slides:
                 c.clear_widgets()
             self.permanent_help_flag = False
 
@@ -113,7 +131,7 @@ class ViewCube(Screen):
         self.app.stored_data.put("view", permanent_help=self.permanent_help_flag)
 
     def show_help_digit(self):
-        for c in self.imge_cash.values():
+        for c in self.carousel.slides:
             c.init_help_digit()
 
     def create_cash(self, count=2):

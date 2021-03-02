@@ -1,5 +1,5 @@
-
-__version__ = "0.1.19"
+#!/usr/bin/python3
+__version__ = "0.1.26"
 
 from kivy.lang import Builder
 from kivy.storage.jsonstore import JsonStore
@@ -54,6 +54,7 @@ class MainBoxApp(MDApp):
         self.stored_data = JsonStore('data/data.json')
         self.check_data = self.stored_data.get("checked")
         self.permanent_help_flag = self.stored_data.get("view")["permanent_help"]
+        self.image_numeric_flag = self.stored_data.get("image_numeric_flag")["image_numeric_flag"]
         self.seq = Seq()
 
         true_checks = [k for k in self.check_data if self.check_data[k]]
@@ -95,20 +96,26 @@ class MainBoxApp(MDApp):
         self.viewcube.cash_list = img_list.copy()
         self.viewcube.carousel.clear_widgets()
         self.viewcube.create_cash()
-        self.viewcube.creat_image_btns(self.viewcube.current_cash)
+        print(self.image_numeric_flag, "self.image_numeric_flag")
+        self.viewcube.creat_image_btns(self.viewcube.current_cash, image_numeric_flag=self.image_numeric_flag)
         self.viewcube.add_in_carusel(self.viewcube.current_cash)
 
     def shuffle(self, v):
         self.viewcube.carousel.clear_widgets()
         self.seq.shuffle()
-        self.viewcube.imge_cash.clear()
+        # self.viewcube.imge_cash.clear()
         self.run_view()
 
 
     def next_slide(self, index):
+        if index is not None:
+            id = (index+1)*(100/len(self.seq.data))
+
+            self.viewcube.progerss.value = id
         if index != 0:
             self.viewcube.create_cash()
-            self.viewcube.creat_image_btns(self.viewcube.current_cash)
+            print(self.image_numeric_flag, "!!!!")
+            self.viewcube.creat_image_btns(self.viewcube.current_cash, self.image_numeric_flag)
             self.viewcube.add_in_carusel(self.viewcube.current_cash)
 
     def select_group(self, select_flag):
@@ -122,8 +129,19 @@ class MainBoxApp(MDApp):
                 self.check_data[name] = False
         self.stored_data.put("checked", **self.check_data)
 
+    def sort(self, v):
+        self.seq.sort()
+        self.run_view()
 
-
+    def select_numeric(self, v):
+        self.viewcube.carousel.clear_widgets()
+        self.viewcube.imge_cash.clear()
+        if self.image_numeric_flag == "images":
+            self.image_numeric_flag = "digit"
+        else:
+            self.image_numeric_flag = "images"
+        self.stored_data.put("image_numeric_flag", image_numeric_flag=self.image_numeric_flag)
+        self.run_view()
     def stop(self, *largs):
         super().stop()
 if __name__ == '__main__':

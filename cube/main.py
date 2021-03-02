@@ -4,6 +4,8 @@ __version__ = "0.1.19"
 from kivy.lang import Builder
 from kivy.storage.jsonstore import JsonStore
 from kivy.uix.button import Button
+
+
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivymd.app import MDApp
 
@@ -71,7 +73,8 @@ class MainBoxApp(MDApp):
         self.viewcube = ViewCube(name='viewcube')
         self.viewcube.permanent_help_flag = self.permanent_help_flag
         self.viewcube.init_carousel()
-        self.viewcube.creat_image_btns()
+        # self.viewcube.cash_list = self.seq.data.copy()
+        # self.viewcube.creat_image_btns()
         self.sm.add_widget(self.viewcube)
 
     def _init_image_view_grid(self):
@@ -85,19 +88,31 @@ class MainBoxApp(MDApp):
         self.settings_screen.set_version_label(__version__, str(Window.size))
         self.sm.add_widget(self.settings_screen)
 
-    def run_view(self, v):
-        img_list = self.seq.data
+    def run_view(self, v=None):
         self.sm.current = "viewcube"
-        self.viewcube.load_image(img_list)
+        img_list = self.seq.data
+        self.viewcube.cash_list.clear()
+        self.viewcube.cash_list = img_list.copy()
+        self.viewcube.carousel.clear_widgets()
+        self.viewcube.create_cash()
+        self.viewcube.creat_image_btns(self.viewcube.current_cash)
+        self.viewcube.add_in_carusel(self.viewcube.current_cash)
+
+    def shuffle(self, v):
+        self.viewcube.carousel.clear_widgets()
+        self.seq.shuffle()
+        self.viewcube.imge_cash.clear()
+        self.run_view()
+
 
     def next_slide(self, index):
-        if index is not None:
-            print(self.seq.data[index], "!!!!")
+        if index != 0:
+            self.viewcube.create_cash()
+            self.viewcube.creat_image_btns(self.viewcube.current_cash)
+            self.viewcube.add_in_carusel(self.viewcube.current_cash)
 
     def select_group(self, select_flag):
         self.image_view_grid.select_all(select_flag)
-
-
 
     def save(self, data_list):
         for name in self.check_data:

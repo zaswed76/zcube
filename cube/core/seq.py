@@ -8,6 +8,7 @@ class Seq:
         self._data = list(range(start, end))
 
     def set_data_on_seq(self, seq):
+        # print(seq, "-----------------")
         self._data.clear()
         for t in seq:
             start = int(t + "0")

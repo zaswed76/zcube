@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-__version__ = "0.1.26"
+__version__ = "0.1.27"
 
 from kivy.lang import Builder
 from kivy.storage.jsonstore import JsonStore

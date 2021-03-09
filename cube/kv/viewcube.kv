@@ -1,16 +1,49 @@
 #:import MDCard kivymd.uix.card.MDCard
+#:import IconButton guilib.IconButton
 
 
 <ViewCube>:
     tool_bar: tool_bar
     view_float_box: view_float_box
+    shuffle_btn: shuffle_btn
     FloatLayout:
         id: view_float_box
         MDToolbar:
+#            background_image: 'resources/icons/bg.jpg'
+            md_bg_color: 0.5, 0.5, 0.5, 1
             id: tool_bar
             pos_hint: {'top':1}
             size_hint: 1, 0.1
-            right_action_items: [["home", lambda x: app.viewcube.callback_home(x)]]
-            left_action_items: [["arrow-left-bold-outline", lambda x: app.viewcube.callback_back(x)], ["shuffle", lambda x: app.shuffle(x)], ["format-list-bulleted", lambda x: app.sort(x)], ["help", lambda x: app.viewcube.hide_help_digit(x)], ["image-outline", lambda x: app.select_numeric(x)]]
+            left_action_items: [["arrow-left-bold-outline", lambda x: app.viewcube.callback_back(x)]]
 
 
+#            left_action_items: [["arrow-left-bold-outline", lambda x: app.viewcube.callback_back(x)], ["shuffle", lambda x: app.shuffle(x)], ["format-list-bulleted", lambda x: app.sort(x)], ["help", lambda x: app.viewcube.hide_help_digit(x)], ["image-outline", lambda x: app.select_numeric(x)]]
+
+#            MDFloatingActionButton:
+#                pos_hint: {"center_y": 0.5}
+#                size_hint: None, None
+#                size: 20, 20
+#                icon: "shuffle"
+#                md_bg_color: app.theme_cls.primary_color
+
+
+            IconButton:
+                id: shuffle_btn
+                pos_hint: {"center_y": 0.5}
+                user_font_size: "4sp"
+                checked_icon: "resources/icons/shuffle.png"
+                unchecked_icon: "resources/icons/shuffle-disabled.png"
+                on_press: app.shuffle()
+
+#            MDRoundFlatButton:
+#
+#                text: "перемешать"
+#                text_color: 0.2, 0.2, 0.2, .9
+#                size: self.texture_size
+
+#                on_active: app.on_checkbox_active(*args)
+            MDLabel:
+
+            MDCheckbox:
+            BoxLayout:
+#                right_action_items: [["home", lambda x: app.viewcube.callback_home(x)]]

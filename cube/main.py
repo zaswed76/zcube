@@ -74,8 +74,7 @@ class MainBoxApp(MDApp):
         self.viewcube = ViewCube(name='viewcube')
         self.viewcube.permanent_help_flag = self.permanent_help_flag
         self.viewcube.init_carousel()
-        # self.viewcube.cash_list = self.seq.data.copy()
-        # self.viewcube.creat_image_btns()
+        self.viewcube.update_widgets()
         self.sm.add_widget(self.viewcube)
 
     def _init_image_view_grid(self):
@@ -96,15 +95,15 @@ class MainBoxApp(MDApp):
         self.viewcube.cash_list = img_list.copy()
         self.viewcube.carousel.clear_widgets()
         self.viewcube.create_cash()
-        print(self.image_numeric_flag, "self.image_numeric_flag")
         self.viewcube.creat_image_btns(self.viewcube.current_cash, image_numeric_flag=self.image_numeric_flag)
         self.viewcube.add_in_carusel(self.viewcube.current_cash)
 
-    def shuffle(self, v):
-        self.viewcube.carousel.clear_widgets()
-        self.seq.shuffle()
-        # self.viewcube.imge_cash.clear()
-        self.run_view()
+    def shuffle(self):
+        print("#######")
+        # self.viewcube.carousel.clear_widgets()
+        # self.seq.shuffle()
+        # # self.viewcube.imge_cash.clear()
+        # self.run_view()
 
 
     def next_slide(self, index):
@@ -114,7 +113,6 @@ class MainBoxApp(MDApp):
             self.viewcube.progerss.value = id
         if index != 0:
             self.viewcube.create_cash()
-            print(self.image_numeric_flag, "!!!!")
             self.viewcube.creat_image_btns(self.viewcube.current_cash, self.image_numeric_flag)
             self.viewcube.add_in_carusel(self.viewcube.current_cash)
 
@@ -144,5 +142,6 @@ class MainBoxApp(MDApp):
         self.run_view()
     def stop(self, *largs):
         super().stop()
+
 if __name__ == '__main__':
     MainBoxApp().run()

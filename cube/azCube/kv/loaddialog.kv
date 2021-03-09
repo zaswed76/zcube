@@ -1,0 +1,33 @@
+
+#:import platform kivy.utils.platform
+
+
+<LoadDialog>:
+    filechooser: filechooser
+
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+#            on_parent:
+#            rootpath ='/storage/emulated/0/' if platform == "android" else "/"
+
+
+        BoxLayout:
+            size_hint_y: None
+            height: 50
+            spacing: 2
+            MDRaisedButton:
+                md_bg_color: 0, .4, .5, 1
+                size_hint: 0.5, None
+                text: "Отмена"
+                on_release: root.cancel()
+
+            MDRaisedButton:
+                md_bg_color: 0, .4, .5, 1
+                size_hint: 0.5, None
+                text: "Выбор"
+                on_release: root.load(filechooser.path, filechooser.selection)
+

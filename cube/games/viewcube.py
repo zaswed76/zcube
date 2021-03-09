@@ -51,6 +51,7 @@ class MyButton(ButtonBehavior, Image):
 
 
 class MyCarousel(Carousel):
+
     def on_index(self, *args):
         MDApp.get_running_app().next_slide(self.index)
         Carousel.on_index(self, *args)
@@ -140,3 +141,11 @@ class ViewCube(Screen):
     @property
     def current_cash(self):
         return self._current_cash
+
+    def shuffle(self):
+        self.shuffle_btn.checked = not self.shuffle_btn.checked
+        self.shuffle_btn.update()
+        self.app.shuffle()
+
+    def update_widgets(self):
+        self.shuffle_btn.update()

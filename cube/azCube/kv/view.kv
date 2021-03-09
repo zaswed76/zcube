@@ -1,0 +1,96 @@
+#:import MDCard kivymd.uix.card.MDCard
+#:import CheckButton screens.view.CheckButton
+
+
+
+<View>:
+    tool_bar: tool_bar
+    view_float_box: view_float_box
+    mainwidget: mainwidget
+    loop_checked: loop_checked
+    image_num_checked: image_num_checked
+    shuffle_checked: shuffle_checked
+    FloatLayout:
+        id: view_float_box
+        MDToolbar:
+            md_bg_color: .7, .7, .7, 1
+            id: tool_bar
+            pos_hint: {'top':1}
+            size_hint: 1, 0.07
+
+            MDIconButton:
+                icon: "resources/icons/arrow-left-bold-outline.png"
+                user_font_size: "2sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press: app.run_grid_image("")
+
+            Label:
+            Label:
+
+            MDIconButton:
+                icon: "resources/icons/play.png"
+                user_font_size: "14sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press: app.view.start_carousel()
+            Label:
+
+
+
+            CheckButton:
+                id: loop_checked
+                user_font_size: "6sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press: app.view.set_cycle(not self.checked)
+                on_parent:
+                    self.icon_checked = "resources/icons/loop_checked.png"
+                    self.icon_unchecked = "resources/icons/loop.png"
+                    self.checked = app.stored_data.get("ui")["cycle"]
+                    self.update()
+            Label:
+
+            CheckButton:
+                id: image_num_checked
+                user_font_size: "6sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press: app.view.image_num(self.checked)
+                on_parent:
+                    self.icon_checked = "resources/icons/order-numeric-ascending.png"
+                    self.icon_unchecked = "resources/icons/image-outline.png"
+                    self.checked = app.stored_data.get("ui")["image_num_checked"]
+                    self.update()
+            Label:
+            CheckButton:
+                id: shuffle_checked
+                user_font_size: "6sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press: app.view.shuffle_check_active(not self.checked)
+                on_parent:
+                    self.icon_checked = "resources/icons/shuffle.png"
+                    self.icon_unchecked = "resources/icons/sort.png"
+                    self.checked = app.stored_data.get("ui")["shuffle"]
+                    self.update()
+
+            Label:
+            Label:
+
+            MDIconButton:
+                icon: "resources/icons/dots-vertical.png"
+                user_font_size: "2sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press: app.run_settings_view("")
+#            ActionSeparator:
+
+#            Label:
+
+            MDIconButton:
+                icon: "resources/icons/exit-to-app.png"
+                user_font_size: "2sp"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                on_press: app.stop()
+#            Label:
+
+        BoxLayout:
+            size_hint: 1, 0.9
+            orientation: "vertical"
+            id: mainwidget
+

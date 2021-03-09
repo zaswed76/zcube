@@ -1,0 +1,13 @@
+<SettingsView>:
+    tool_bar: tool_bar
+    view_float_box: view_float_box
+    FloatLayout:
+        id: view_float_box
+        MDToolbar:
+            title: app.version
+            md_bg_color: .7, .7, .7, 1
+            id: tool_bar
+            pos_hint: {'top':1}
+            size_hint: 1, 0.1
+            left_action_items: [["arrow-left-bold-outline", lambda x: app.run_grid_image(x)]]
+            right_action_items: [["exit-to-app", lambda x: app.stop(x)]]

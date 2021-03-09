@@ -1,0 +1,49 @@
+
+#:import utils kivy.utils
+#:include kv/view.kv
+#:include kv/settingsview.kv
+#:include kv/loaddialog.kv
+
+
+
+
+<ImageGrid>:
+    image_grid_layout: image_grid_layout
+
+
+    BoxLayout:
+        orientation: "vertical"
+        MDToolbar:
+            md_bg_color: .7, .7, .7, 1
+            pos_hint: {'top':1}
+            size_hint: 1, 0.1
+            left_action_items: [["play-outline", lambda x: app.run_view(x)], ["select-group", lambda x: app.image_view_grid.select_group(True)], ["select-off", lambda x: app.image_view_grid.select_group(False)]]
+            right_action_items: [["dots-vertical", lambda x: app.run_settings_view(x)],["exit-to-app", lambda x: app.stop(x)]]
+
+        ScrollView:
+
+            canvas.before:
+                Color:
+                    rgb: utils.get_color_from_hex('#EAEAEA')
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            MDGridLayout:
+
+
+
+                id: image_grid_layout
+                adaptive_height: True
+                padding: 4, 4, 4, 4
+                spacing: 1
+    AnchorLayout:
+        anchor_x: 'right'
+        anchor_y: 'bottom'
+        MDIconButton:
+            user_font_size: "8sp"
+            icon: "resources/icons/add_folder.png"
+            on_press: app.file_manager_open()
+
+
+
+

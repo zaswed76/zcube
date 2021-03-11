@@ -8,7 +8,7 @@ from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.relativelayout import RelativeLayout
 
-
+from screens.image import MyImage, Img
 
 
 class CheckButton(MDIconButton):
@@ -36,64 +36,6 @@ class CheckButton(MDIconButton):
 
 
 
-class MyImage(Image):
-    DIGIT = 'digits'
-    IMAGE = 'images'
-
-    def __init__(self, flag, name, **kwargs):
-        super().__init__(**kwargs)
-        # todo кнопка знаю
-        self.blocked = False
-        self._flag = flag
-        self.help_flag = MyImage.DIGIT if self._flag == MyImage.IMAGE else MyImage.IMAGE
-        self.name = name
-        self.base_source = ""
-        self.help_source = ""
-        self.help_key = ""
-
-
-
-    @property
-    def flag(self):
-        return self._flag
-
-    @flag.setter
-    def flag(self, flag):
-        self.help_flag = MyImage.DIGIT if self._flag == MyImage.IMAGE else MyImage.IMAGE
-        self._flag = flag
-
-    def set_source(self):
-        if self.flag == MyImage.IMAGE:
-            self.source = self.base_source
-        else:
-            self.source = self.help_source
-
-    def init_help_digit(self):
-        s = "resources/{}/{}.png".format(self.help_flag, self.name)
-        img = AsyncImage(source=s)
-        img.size_hint = 1.2, 1.2
-        self.add_widget(img)
-
-    def on_touch_down(self, touch):
-        if touch.is_double_tap:
-            self.source = self.help_key
-            return
-
-        if touch.y < 80.0:
-            if self._flag == MyImage.IMAGE:
-                self.source = self.help_source
-            else:
-                self.source = self.base_source
-            super().on_touch_down(touch)
-
-
-    def on_touch_up(self, touch):
-        if self._flag == MyImage.IMAGE:
-            self.source = self.base_source
-        else:
-            self.source = self.help_source
-        super().on_touch_up(touch)
-
 
 class CashContiner:
     def __init__(self, data_list: list, image_dir=""):
@@ -105,18 +47,17 @@ class CashContiner:
 
     # noinspection PyTypeChecker
     def get_widget(self, base_help_flag, helper_image_flag=False):
-
         lst = []
         for k in self._get_current_cash():
-
             _object = MyImage(base_help_flag, str(k))
-            _object.base_source = "{}/{}/{}.png".format(self.image_dir, "base", k)
-            _object.help_source = "{}/{}/{}.png".format(self.image_dir, "helper", k)
-            _object.help_key = "{}/{}/{}.png".format(self.image_dir, "helper_key", int(k/10)*10)
-            _object.set_source()
+            img = "{}/{}/{}.png".format(self.image_dir, "base", k)
+            print(img)
+            _object.set_base_source(img)
+            _object.set_help_source("{}/{}/{}.png".format(self.image_dir, "helper", k))
+            _object.set_keys_source("{}/{}/{}.png".format(self.image_dir, "helper_key", int(k/10)*10))
+            _object.init_source()
             if helper_image_flag:
                 _object.init_help_digit()
-
             lst.append(_object)
         return lst
 
@@ -153,16 +94,16 @@ class MyCarousel(Carousel):
 
     @len_data.setter
     def len_data(self, ln):
-        self._len_data = ln - 1
+        self._len_data = ln-1
 
     def on_index(self, *args):
         self.gcount += 1
-
         self.cindex = args[1]
         if args[1] != 0:
             MDApp.get_running_app().view.load_to_carousel(args[1])
         elif args[1] is None:
             pass
+
         Carousel.on_index(self, *args)
 
     def on_touch_move(self, touch):
@@ -223,10 +164,10 @@ class View(Screen):
     def image_num(self, active):
         if active:
 
-            self.base_help_flag = MyImage.IMAGE
+            self.base_help_flag = Img.IMAGE
         else:
 
-            self.base_help_flag = MyImage.DIGIT
+            self.base_help_flag = Img.DIGIT
 
 
         self.start_carousel()

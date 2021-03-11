@@ -14,7 +14,6 @@ class Seq:
             end = start + 10
             seq = range(start, end)
             self._data.extend(seq)
-        print(self._data, "data")
         self._data.sort()
 
 

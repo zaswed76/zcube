@@ -19,7 +19,7 @@
             size_hint: 1, 0.07
 
             MDIconButton:
-                icon: "resources/icons/arrow-left-bold-outline.png"
+                icon: "resources/icons/grid.png"
                 user_font_size: "2sp"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 on_press: app.run_grid_image("")
@@ -29,7 +29,7 @@
 
             MDIconButton:
                 icon: "resources/icons/play.png"
-                user_font_size: "14sp"
+                user_font_size: "2sp"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 on_press: app.view.start_carousel()
             Label:
@@ -38,7 +38,7 @@
 
             CheckButton:
                 id: loop_checked
-                user_font_size: "6sp"
+                user_font_size: "2sp"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 on_press: app.view.set_cycle(not self.checked)
                 on_parent:
@@ -50,7 +50,7 @@
 
             CheckButton:
                 id: image_num_checked
-                user_font_size: "6sp"
+                user_font_size: "2sp"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 on_press: app.view.image_num(self.checked)
                 on_parent:
@@ -61,7 +61,7 @@
             Label:
             CheckButton:
                 id: shuffle_checked
-                user_font_size: "6sp"
+                user_font_size: "2sp"
                 pos_hint: {"center_x": .5, "center_y": .5}
                 on_press: app.view.shuffle_check_active(not self.checked)
                 on_parent:

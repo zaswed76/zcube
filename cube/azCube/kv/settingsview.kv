@@ -1,7 +1,13 @@
+
+#:import ListItem main.ListItem
+
+
 <SettingsView>:
     tool_bar: tool_bar
     view_float_box: view_float_box
-    FloatLayout:
+    settings_box: settings_box
+    BoxLayout:
+        orientation: "vertical"
         id: view_float_box
         MDToolbar:
             title: app.version
@@ -9,5 +15,41 @@
             id: tool_bar
             pos_hint: {'top':1}
             size_hint: 1, 0.1
-            left_action_items: [["arrow-left-bold-outline", lambda x: app.run_grid_image(x)]]
+#            height: 50
+            left_action_items: [["arrow-left-bold-outline", lambda x: app.run_back(x)]]
             right_action_items: [["exit-to-app", lambda x: app.stop(x)]]
+
+        ScrollView:
+            canvas.before:
+                Color:
+                    rgb: utils.get_color_from_hex('#EAEAEA')
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+            BoxLayout:
+                id: settings_box
+                orientation: "vertical"
+                size_hint: 1, 0.9
+##                height: 130
+
+
+<ListItem>:
+    padding: 20, 0, 0, 0
+    size_hint: 1, None
+    height: 50
+#    pos_hint: {"x":0,"center_y": 0.5}
+    FloatLayout:
+        MDLabel:
+            id: option_label
+            height: 30
+            pos_hint: {"x":0,"y": 0.25}
+            size_hint: 0.5, None
+            halign: "left"
+            valign: "center"
+        MDTextField:
+            id: option_field
+            size_hint: 1, None
+            height: 30
+            pos_hint: {"x":0.5,"y": 0}
+
+

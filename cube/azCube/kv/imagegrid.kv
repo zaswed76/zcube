@@ -3,23 +3,57 @@
 #:include kv/view.kv
 #:include kv/settingsview.kv
 #:include kv/loaddialog.kv
-
+#:include kv/key_view.kv
+#:import stopTouchApp kivy.base.stopTouchApp
 
 
 
 <ImageGrid>:
     image_grid_layout: image_grid_layout
 
-
+    tool_bar_grid: tool_bar_grid
     BoxLayout:
         orientation: "vertical"
         MDToolbar:
+            id: tool_bar_grid
             md_bg_color: .7, .7, .7, 1
             pos_hint: {'top':1}
-            size_hint: 1, 0.1
-            left_action_items: [["play-outline", lambda x: app.run_view(x)], ["select-group", lambda x: app.image_view_grid.select_group(True)], ["select-off", lambda x: app.image_view_grid.select_group(False)]]
-            right_action_items: [["dots-vertical", lambda x: app.run_settings_view(x)],["exit-to-app", lambda x: app.stop(x)]]
+            size_hint: 1, 0.07
+            padding: 20, 0, 20, 0
+            FloatLayout:
 
+                MDIconButton:
+                    icon: "resources/icons/select-group.png"
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": -1, "center_y": .5}
+                    on_press: app.select_group(True)
+
+                MDIconButton:
+                    icon: "resources/icons/selection-off.png"
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": -0.7,"center_y": .5}
+                    on_press: app.select_group(False)
+
+                MDIconButton:
+                    icon: "resources/icons/play.png"
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": 0, "center_y": .5}
+                    on_press: app.run_view("")
+
+                MDIconButton:
+                    icon: "resources/icons/dots-vertical.png"
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": 0.7, "center_y": .5}
+                    on_press: app.run_settings_view(None)
+
+                MDIconButton:
+                    icon: "resources/icons/exit-to-app.png"
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": 1, "center_y": .5}
+                    on_press: stopTouchApp()
+#            left_action_items: [["play-outline", lambda x: app.run_view(x)], ["select-group", lambda x: app.image_view_grid.select_group(True)], ["select-off", lambda x: app.image_view_grid.select_group(False)]]
+#            right_action_items: [["dots-vertical", lambda x: app.run_settings_view(x)], ["exit-to-app", lambda x: stopTouchApp(x)]]
+#["weather-sunny", lambda x: app.run_keys_view(x)],
         ScrollView:
 
             canvas.before:
@@ -29,20 +63,19 @@
                     pos: self.pos
                     size: self.size
             MDGridLayout:
-
-
-
                 id: image_grid_layout
                 adaptive_height: True
-                padding: 4, 4, 4, 4
-                spacing: 1
-    AnchorLayout:
-        anchor_x: 'right'
-        anchor_y: 'bottom'
+                padding: 20, 20, 20, 10
+                spacing: 2
+    FloatLayout:
         MDIconButton:
+            pos_hint: {"right": 0.95, "y": 0.04}
             user_font_size: "8sp"
             icon: "resources/icons/add_folder.png"
             on_press: app.file_manager_open()
+
+
+<ImageButton>:
 
 
 

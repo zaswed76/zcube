@@ -19,7 +19,7 @@ class MyButton(ButtonBehavior, Image):
         self.image_numeric_flag = None
 
     def set_source(self):
-        print(self.image_numeric_flag, "333333333333333333333")
+        # print(self.image_numeric_flag, "333333333333333333333")
         self.source = "resources/{}/{}.png".format(self.image_numeric_flag, self.name)
 
     def init_help_digit(self):

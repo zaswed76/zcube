@@ -183,7 +183,7 @@ class MainBox(Screen):
             self.start_carousel()
 
     def start_carousel(self):
-        print("!!!!!!!!!!!!!")
+        # print("!!!!!!!!!!!!!")
         self.cash_conteiner.set_data(self.seq.data)
         self.carusel.clear_widgets()
         self.load_to_carousel()

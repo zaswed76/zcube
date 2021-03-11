@@ -1,0 +1,15 @@
+<KeysView>:
+    keys_box: keys_box
+    FloatLayout:
+        MDToolbar:
+            title: "keys"
+            md_bg_color: .7, .7, .7, 1
+            pos_hint: {'top':1}
+            size_hint: 1, 0.1
+            left_action_items: [["arrow-left-bold-outline", lambda x: app.run_grid_image(x)]]
+            right_action_items: [["exit-to-app", lambda x: app.stop(x)]]
+
+        BoxLayout:
+            size_hint: 1, 0.9
+            orientation: "vertical"
+            id: keys_box

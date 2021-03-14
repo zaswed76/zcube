@@ -1,0 +1,119 @@
+
+#:import NavigationDrawer screens.trainingpkg.numbergenerator.NavigationDrawer
+
+#<NNavigationDrawer@NavigationDrawer>:
+
+<NumButton>:
+    background_normal: ''
+    background_color: 0.7, .7, .7, .8
+    color: 1,1,1,1
+#    size_hint_y: 0.3
+#    canvas.before:
+#        Color:
+#            rgba: 0, .6, .8, 1
+#        Line:
+#            width: 1
+#            rectangle: self.x, self.y, self.width, self.height
+
+<NumberGenerator>:
+    nav_drawer: nav_drawer
+    content_navigation: content_navigation
+    generator_label: generator_label
+    generator_field: generator_field
+    num_grid: num_grid
+    bottom_scroll: bottom_scroll
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    MDCard:
+
+        orientation: "vertical"
+        padding: "8dp"
+        size_hint: 0.9, 0.9
+#        size: "280dp", "180dp"
+        pos_hint: {"center_x": .5, "center_y": .5}
+        BoxLayout:
+            size_hint: 1, 0.1
+            orientation: "vertical"
+            spacing: 10
+            BoxLayout:
+                size_hint: 1, 0.5
+                ScrollView:
+#                    size_hint: 1, 0.5
+#                    height: root.height/2
+                    MDTextField:
+
+#                        mode: "rectangle"
+                        multiline: True
+                        id: generator_label
+            MDSeparator:
+                height: "2dp"
+
+            BoxLayout:
+                size_hint: 1, 0.5
+                ScrollView:
+                    id: bottom_scroll
+#                    size_hint: 1, 0.5
+#                    height: root.height/2
+
+                    MDTextField
+
+
+
+                        id: generator_field
+
+                        multiline: True
+                        line_color_normal: 0.7, .7, .7, .4
+#                        helper_text: "error"
+#                        helper_text_mode: "on_error"
+#                        error: True
+
+
+            GridLayout:
+                id: num_grid
+                size_hint: 1, 0.6
+                cols: 3
+                spacing: 1
+
+            BoxLayout:
+                size_hint: 1, 0.1
+
+                AnchorLayout:
+                    pos_hint: {"center_x": 0, "center_y": 0.5}
+                    MDIconButton:
+                        icon: "dots-vertical"
+#                        pos_hint: {"center_x": .05, "center_y": .05}
+                        on_release: nav_drawer.set_state("open")
+                AnchorLayout:
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    MDIconButton:
+                        icon: "play"
+#                        pos_hint: {"center_x": .5, "center_y": .05}
+                        on_release: app.number_generator.generate()
+                AnchorLayout:
+                    pos_hint: {"center_x": 1, "center_y": 0.5}
+                    MDIconButton:
+                        icon: "menu"
+
+                        on_release: app.screen_manager.current = 'training'
+
+
+
+
+
+
+    MDNavigationLayout:
+
+
+
+
+        NavigationDrawer:
+            id: nav_drawer
+
+
+            ContentNavigationDrawer:
+                id: content_navigation

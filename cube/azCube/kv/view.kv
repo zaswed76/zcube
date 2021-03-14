@@ -10,6 +10,7 @@
     loop_checked: loop_checked
     image_num_checked: image_num_checked
     shuffle_checked: shuffle_checked
+    timer_checked: timer_checked
     FloatLayout:
         id: view_float_box
         MDToolbar:
@@ -17,77 +18,92 @@
             id: tool_bar
             pos_hint: {'top':1}
             size_hint: 1, 0.07
+            FloatLayout:
+                MDIconButton:
+                    icon: "resources/icons/home.png"
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": -0.9, "center_y": .5}
+                    on_press: app.run_start_screen(None)
 
-            MDIconButton:
-                icon: "resources/icons/grid.png"
-                user_font_size: "2sp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                on_press: app.run_grid_image("")
-
-            Label:
-            Label:
-
-            MDIconButton:
-                icon: "resources/icons/play.png"
-                user_font_size: "2sp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                on_press: app.view.start_carousel()
-            Label:
+                MDIconButton:
+                    icon: "resources/icons/grid.png"
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": -.70, "center_y": .5}
+                    on_press: app.go_grid_image("")
 
 
 
-            CheckButton:
-                id: loop_checked
-                user_font_size: "2sp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                on_press: app.view.set_cycle(not self.checked)
-                on_parent:
-                    self.icon_checked = "resources/icons/loop_checked.png"
-                    self.icon_unchecked = "resources/icons/loop.png"
-                    self.checked = app.stored_data.get("ui")["cycle"]
-                    self.update()
-            Label:
+                MDIconButton:
+                    icon: "resources/icons/play.png"
+                    user_font_size: "8sp"
+                    pos_hint: {"center_x": -0.5, "center_y": .5}
+                    on_press: app.view.start_carousel()
 
-            CheckButton:
-                id: image_num_checked
-                user_font_size: "2sp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                on_press: app.view.image_num(self.checked)
-                on_parent:
-                    self.icon_checked = "resources/icons/order-numeric-ascending.png"
-                    self.icon_unchecked = "resources/icons/image-outline.png"
-                    self.checked = app.stored_data.get("ui")["image_num_checked"]
-                    self.update()
-            Label:
-            CheckButton:
-                id: shuffle_checked
-                user_font_size: "2sp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                on_press: app.view.shuffle_check_active(not self.checked)
-                on_parent:
-                    self.icon_checked = "resources/icons/shuffle.png"
-                    self.icon_unchecked = "resources/icons/sort.png"
-                    self.checked = app.stored_data.get("ui")["shuffle"]
-                    self.update()
+                CheckButton:
+                    id: timer_checked
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": -0.3, "center_y": .5}
+#                    on_press: app.view.set_cycle(not self.checked)
+                    on_parent:
+                        self.icon_checked = "resources/icons/clock-time-two.png"
+                        self.icon_unchecked = "resources/icons/clock-time-two-outline.png"
+                        self.checked = app.stored_data.get("ui")["cycle"]
+                        self.update()
 
-            Label:
-            Label:
 
-            MDIconButton:
-                icon: "resources/icons/dots-vertical.png"
-                user_font_size: "2sp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                on_press: app.run_settings_view("")
-#            ActionSeparator:
 
-#            Label:
+                CheckButton:
+                    id: loop_checked
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": 0, "center_y": .5}
+                    on_press: app.view.set_cycle(not self.checked)
+                    on_parent:
+                        self.icon_checked = "resources/icons/loop_checked.png"
+                        self.icon_unchecked = "resources/icons/loop.png"
+                        self.checked = app.stored_data.get("ui")["cycle"]
+                        self.update()
 
-            MDIconButton:
-                icon: "resources/icons/exit-to-app.png"
-                user_font_size: "2sp"
-                pos_hint: {"center_x": .5, "center_y": .5}
-                on_press: app.stop()
-#            Label:
+
+                CheckButton:
+                    id: image_num_checked
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": 0.2, "center_y": .5}
+                    on_press: app.view.image_num(self.checked)
+                    on_parent:
+                        self.icon_checked = "resources/icons/order-numeric-ascending.png"
+                        self.icon_unchecked = "resources/icons/image-outline.png"
+                        self.checked = app.stored_data.get("ui")["image_num_checked"]
+                        self.update()
+                Label:
+                CheckButton:
+                    id: shuffle_checked
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": .4, "center_y": .5}
+                    on_press: app.view.shuffle_check_active(not self.checked)
+                    on_parent:
+                        self.icon_checked = "resources/icons/shuffle.png"
+                        self.icon_unchecked = "resources/icons/sort.png"
+                        self.checked = app.stored_data.get("ui")["shuffle"]
+                        self.update()
+
+                Label:
+                Label:
+
+                MDIconButton:
+                    icon: "resources/icons/dots-vertical.png"
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": .70, "center_y": .5}
+                    on_press: app.run_settings_view("")
+#                ActionSeparator:
+
+#                Label:
+
+                MDIconButton:
+                    icon: "resources/icons/exit-to-app.png"
+                    user_font_size: "2sp"
+                    pos_hint: {"center_x": 0.9, "center_y": .5}
+                    on_press: app.stop()
+#                Label:
 
         BoxLayout:
             size_hint: 1, 0.9

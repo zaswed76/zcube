@@ -10,18 +10,53 @@ from kivymd.uix.label import MDLabel
 from kivymd.uix.list import BaseListItem, MDList
 from kivymd.uix.navigationdrawer import MDNavigationDrawer
 from kivymd.uix.textfield import MDTextField
+from kivy import utils
+
+
+RoyalBlueColor = utils.get_color_from_hex("#4169E1")
+LightSeaGreenColor = utils.get_color_from_hex("#20B2AA")
+ForestGreenColor = utils.get_color_from_hex("#228B22")
+LightSlateGreyColor = utils.get_color_from_hex("#778899")
 
 
 class NumButton(Button):
-    def __init__(self, **kwargs):
+    def __init__(self, normal_color=None, checked_color=None, **kwargs):
         super().__init__(**kwargs)
+
+        self.checked_color = checked_color
+        self.normal_color = normal_color
+        self.background_color = self.normal_color
+
         self.app = App.get_running_app()
+        self.checkable = False
+        self._checked = False
+
+    @property
+    def checked(self):
+        return self._checked
+
+    @checked.setter
+    def checked(self, checked):
+        if checked:
+            self.background_color = self.checked_color
+        else:
+            self.background_color = self.normal_color
+        self._checked = checked
+
 
     def on_touch_down(self, touch):
         if touch.is_double_tap:
             if self.app.number_generator.current_simbol == "<":
                 self.app.number_generator.clean_text_field()
         super().on_touch_down(touch)
+
+    def on_press(self, *args):
+        if self.checkable:
+            self.checked = not self.checked
+
+
+
+
 
 
 class NavigationDrawer(MDNavigationDrawer):
@@ -85,8 +120,11 @@ class NumberGenerator(Screen):
         self._options["sep"] = stored_data.get("generator")["sep"]
         self._options["font_size"] = stored_data.get("generator")["font_size"]
         self.tex_field = []
-        self.current_random = None
+        self.current_random = []
+        self.current_random_memory = stored_data.get("generator")["current_random"]
         self.tex_field_blocked = False
+        self.tex_field_blocked_blocked = False
+        self.label_random_text = ''
         self.start = False
         self.current_simbol = None
         self._init_option()
@@ -101,13 +139,22 @@ class NumberGenerator(Screen):
         self.generator_field.font_size = self._options["font_size"]
 
     def _init_num_grid(self):
-        names = ('1', '2', '3', '4', '5', '6', '7', '8', '9', "<", '0', "?")
+        names = ('1', '2', '3', "M+", '4', '5', '6', "M", '7','8', '9', "B", "<", '0', "?", "C")
         for n in names:
-
-
-            btn = NumButton(text=n, on_press=self.pres_num)
-            if n in ["<", "?"]:
-                btn.background_color = 0, .7, .7, .8
+            if n == "B":
+                btn = NumButton(normal_color=RoyalBlueColor,
+                                checked_color=ForestGreenColor,
+                                text=n, on_press=self.pres_num)
+                btn.checkable = True
+            elif n in ["<", "?", "C"]:
+                btn = NumButton(normal_color=LightSeaGreenColor,
+                                text=n, on_press=self.pres_num)
+            elif n in ("M", "M+"):
+                btn = NumButton(normal_color=RoyalBlueColor,
+                                text=n, on_press=self.pres_num)
+            else:
+                btn = NumButton(normal_color=LightSlateGreyColor,
+                                text=n, on_press=self.pres_num)
             self.num_grid.add_widget(btn)
 
     def pres_num(self, widget):
@@ -120,7 +167,18 @@ class NumberGenerator(Screen):
                 self.ids.generator_label.text = ""
                 self.ids.generator_label.line_color_normal = 0.7, .7, .7, .4
         elif self.current_simbol == "?":
-            self.ids.generator_label.text = self.label_random_text
+            if self.label_random_text:
+                self.ids.generator_label.text = self.label_random_text
+        elif self.current_simbol == "M+":
+            self.current_random_memory = self._current_random_origin.copy()
+        elif self.current_simbol == "M":
+            self._current_random_origin = self.current_random_memory.copy()
+            self.set_generator_label(self._current_random_origin)
+
+        elif self.current_simbol == "B":
+            self.tex_field_blocked_blocked = not self.tex_field_blocked_blocked
+        elif self.current_simbol == "C":
+            self.clean_text_field()
         elif not self.tex_field_blocked:
             self.bottom_scroll.scroll_y = 1
             self.tex_field.append(self.current_simbol)
@@ -128,7 +186,8 @@ class NumberGenerator(Screen):
 
             if len(self.tex_field) > 0:
                 self.start = True
-                self.ids.generator_label.text = ""
+                if not self.tex_field_blocked_blocked:
+                    self.ids.generator_label.text = ""
         self.ids.generator_field.text = "".join(self.tex_field)
         self.on_error(self.current_simbol)
 
@@ -154,7 +213,7 @@ class NumberGenerator(Screen):
             elif len(self.ids.generator_field.text) >= len(self.current_random):
                 self.tex_field_blocked = True
                 self.ids.generator_label.text = self.label_random_text
-                self.ids.generator_label.line_color_normal = 0, .4, 0.2, 1
+                self.ids.generator_label.line_color_normal = 0, .7, 0.1, 1
             # верно
             elif not len(self.ids.generator_field.text):
                 self.tex_field_blocked = False
@@ -186,14 +245,18 @@ class NumberGenerator(Screen):
 
     def generate(self):
             if self.valid_value(self._options["start"],  self._options["end"], self._options["count"]):
-                _current_random = self.random_generator_core.not_repeat(int(self._options["start"]),
+                self._current_random_origin = self.random_generator_core.not_repeat(int(self._options["start"]),
                                                           int(self._options["end"]),
                                                           int(self._options["count"]))
-                self.current_random = list(itertools.chain(*[list(x) for x in _current_random]))
-                self.label_random_text = self._options["sep"].join(_current_random)
-                self.ids.generator_label.text = self.label_random_text
-                self.ids.generator_label.line_color_normal = 0.7, .7, .7, .4
+                self.set_generator_label(self._current_random_origin)
+
             self.clean_text_field()
+
+    def set_generator_label(self, _current_random_origin):
+        self.label_random_text = self._options["sep"].join(_current_random_origin )
+        self.ids.generator_label.text = self.label_random_text
+        self.current_random = list(itertools.chain(*[list(x) for x in self._current_random_origin]))
+        self.ids.generator_label.line_color_normal = 0.7, .7, .7, .4
 
     def valid_value(self, start, end, count):
         if all([start, end, count]) and count != "0" and end != "0" and int(end) > int(start):

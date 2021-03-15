@@ -1,4 +1,6 @@
-__version__ = "0.1.80"
+from kivy.uix.colorpicker import ColorPicker
+
+__version__ = "0.1.81"
 # ------------------------------------------------------
 from kivy.core.window import Window
 from kivy.utils import platform
@@ -24,6 +26,7 @@ from screens.settings import SettingsView
 from screens.startscreen import StartScreen
 from screens.training import TrainingScreen
 from screens.trainingpkg.numbergenerator import NumberGenerator
+from screens.colorpickerscreen import ColorPickerScreen
 from core.randomgenerator import RandomGenerator
 
 from kivy.lang import Builder
@@ -72,6 +75,7 @@ class MainBoxApp(MDApp):
         self._init_keys_view()
         self._init_training()
         self._init_number_generator_screen()
+        self._init_color_picker()
 
         self.screen_manager.current = "start_screen"
 
@@ -109,6 +113,10 @@ class MainBoxApp(MDApp):
 
     # --------------------------------------------------------------------
 
+    def _init_color_picker(self):
+        self.color_picker_screen = ColorPickerScreen(name='color_picker_screen')
+        self.screen_manager.add_widget(self.color_picker_screen)
+
     def _init_training(self):
         self.training = TrainingScreen(self.stored_data, name="training")
         self.screen_manager.add_widget(self.training)
@@ -144,6 +152,13 @@ class MainBoxApp(MDApp):
     def _init_number_generator_screen(self):
         self.number_generator = NumberGenerator(self.random_generator_core, self.stored_data, name='number_generator')
         self.screen_manager.add_widget(self.number_generator)
+
+    def color_pick(self, v):
+
+        self.screen_manager.current = "color_picker_screen"
+
+    def on_color(self, instance, value):
+        print(value)
 
     def run_view(self, v):
         self.current_screen = "view"
@@ -222,12 +237,17 @@ class MainBoxApp(MDApp):
         start_fields_generator = self.number_generator.options["start"].option_field.text
         end_fields_generator = self.number_generator.options["end"].option_field.text
         sep_fields_generator = self.number_generator.options["sep"].option_field.text
+        current_random = self.number_generator.current_random_memory
         save_dict_generator = dict(start=start_fields_generator,
                                    end=end_fields_generator,
                                    count=count_fields_generator,
                                    sep=sep_fields_generator,
-                                   font_size=size_font_fields_generator)
+                                   font_size=size_font_fields_generator,
+                                   current_random=current_random
+
+                                   )
         self.stored_data.put("generator", **save_dict_generator)
+
 
 
 if __name__ == '__main__':

@@ -1,3 +1,5 @@
+from kivy.graphics.context_instructions import Color
+from kivy.graphics.vertex_instructions import Rectangle
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.carousel import Carousel
 from kivy.uix.image import Image, AsyncImage
@@ -114,6 +116,8 @@ class MyCarousel(Carousel):
 class View(Screen):
     def __init__(self, seq, stored_data, image_dir="", **kwargs):
         super().__init__(**kwargs)
+        self.size_hint = 1 ,1
+
 
         self.stored_data = stored_data
         self.image_dir = image_dir
@@ -133,8 +137,17 @@ class View(Screen):
         self.mainwidget.add_widget(self.carusel)
 
         self.cycle = self.stored_data.get("ui")["cycle"]
+        self.bind(pos=self.update_rect, size=self.update_rect)
+        self.set_color((1, 1, 1, 1))
 
+    def update_rect(self, *args):
+        self.rect.pos = self.pos
+        self.rect.size = self.size
 
+    def set_color(self, color):
+        with self.canvas.before:
+            Color(*color)
+            self.rect = Rectangle(pos=self.pos, size=self.size)
 
     def set_image_dir(self, path):
         self.image_dir = path

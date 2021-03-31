@@ -3,17 +3,50 @@
 
 #<NNavigationDrawer@NavigationDrawer>:
 
+<ContentNavigation@ContentNavigationDrawer>:
+    orientation: "vertical"
+
+<ItemFieldList@BoxLayout>:
+    orientation: "vertical"
+#    canvas.before:
+#        Color:
+#            rgba: 0.80, 0.80, 0.80, 1
+#        Rectangle:
+#            pos: self.pos
+#            size: self.size
+    size_hint: 1, 0.1
+    height: 45
+    MDLabel:
+        id: item_field_label
+        font_size: '16sp'
+        padding_x: 25
+        theme_text_color: "Custom"
+        text_color: 0.7, 0.7, 0.7, 1
+#        text: "start"
+    MDTextField:
+        id: item_field
+        padding: 10, 0, 0, 0
+        multiline: False
+        size_hint: 0.8, None
+        height: 50
+        font_size: '16sp'
+        color_mode: 'custom'
+        pos_hint: {"center_x": 0.5}
+
+        theme_text_color: 'Custom'
+        line_color_normal: 0.9, 0.9, 0.9, 1
+        text_color_normal: 1, 0.0, 0.0, 1
+
+#
+        multiline: True
+
+
+
 <NumButton>:
     background_normal: ''
     background_color: 0.7, .7, .7, .8
     color: 1,1,1,1
-#    size_hint_y: 0.3
-#    canvas.before:
-#        Color:
-#            rgba: 0, .6, .8, 1
-#        Line:
-#            width: 1
-#            rectangle: self.x, self.y, self.width, self.height
+
 
 <NumberGenerator>:
     nav_drawer: nav_drawer
@@ -22,6 +55,7 @@
     generator_field: generator_field
     num_grid: num_grid
     bottom_scroll: bottom_scroll
+    box_content: box_content
     canvas.before:
         Color:
             rgba: 1, 1, 1, 1
@@ -101,19 +135,25 @@
 
                         on_release: app.screen_manager.current = 'training'
 
-
-
-
-
-
     MDNavigationLayout:
-
-
-
-
         NavigationDrawer:
             id: nav_drawer
+            swipe_edge_width: 35
+            swipe_distance: 2
+            opening_time: 0.1
 
 
-            ContentNavigationDrawer:
+            ContentNavigation:
                 id: content_navigation
+                FloatLayout:
+                    BoxLayout:
+                        id: box_content
+                        orientation: "vertical"
+                        size_hint: 1, 0.8
+                        pos_hint: {"x": 0, "top": 0.97}
+                        spacing: 30
+                        padding: 0, 40, 0, 0
+
+
+
+

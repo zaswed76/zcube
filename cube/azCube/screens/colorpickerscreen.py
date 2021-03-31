@@ -8,6 +8,8 @@ from kivymd.uix.button import MDRaisedButton
 class ColorPickerScreen(Screen):
     def __init__(self, **kw):
         super().__init__(**kw)
+        self.size_hint = 0.9, 0.9
+        self.pos_hint = {"center_x": 0.5, "center_y": 0.5}
         box = BoxLayout()
         box.orientation = "vertical"
         self.add_widget(box)

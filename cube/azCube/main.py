@@ -1,16 +1,17 @@
 from kivy.uix.colorpicker import ColorPicker
 
-__version__ = "0.1.81"
+__version__ = "0.1.90"
 # ------------------------------------------------------
 from kivy.core.window import Window
 from kivy.utils import platform
 from kivymd.uix.filemanager import MDFileManager
-
+Window.allow_screensaver = False
 if platform == 'android':
     try:
         from android.permissions import request_permissions, Permission
 
         request_permissions([Permission.WRITE_EXTERNAL_STORAGE])
+
     except:
         pass
 else:
@@ -232,11 +233,11 @@ class MainBoxApp(MDApp):
                          shuffle=shuffle, base_help_flag=base_help_flag)
         self.stored_data.put("ui", **save_dict_ui)
 
-        size_font_fields_generator = self.number_generator.options["font_size"].option_field.text + "sp"
-        count_fields_generator = self.number_generator.options["count"].option_field.text
-        start_fields_generator = self.number_generator.options["start"].option_field.text
-        end_fields_generator = self.number_generator.options["end"].option_field.text
-        sep_fields_generator = self.number_generator.options["sep"].option_field.text
+        size_font_fields_generator = self.number_generator.options["font_size"].item_field.text + "sp"
+        count_fields_generator = self.number_generator.options["count"].item_field.text
+        start_fields_generator = self.number_generator.options["start"].item_field.text
+        end_fields_generator = self.number_generator.options["end"].item_field.text
+        sep_fields_generator = self.number_generator.options["sep"].item_field.text
         current_random = self.number_generator.current_random_memory
         save_dict_generator = dict(start=start_fields_generator,
                                    end=end_fields_generator,

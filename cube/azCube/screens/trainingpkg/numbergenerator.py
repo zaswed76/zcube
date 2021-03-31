@@ -1,17 +1,21 @@
 import itertools
+from functools import partial
 
 from kivy.app import App
 from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import Screen
-from kivy.uix.scrollview import ScrollView
+from kivy.uix.floatlayout import FloatLayout
+from kivymd.app import MDApp
+from kivymd.uix.button import MDIconButton
+from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
-from kivymd.uix.list import BaseListItem, MDList
+from kivymd.uix.list import BaseListItem, MDList, OneLineListItem, OneLineAvatarIconListItem
 from kivymd.uix.navigationdrawer import MDNavigationDrawer
-from kivymd.uix.textfield import MDTextField
+from kivymd.uix.textfield import MDTextField, MDTextFieldRect
 from kivy import utils
-
+from kivy.clock import Clock
 
 RoyalBlueColor = utils.get_color_from_hex("#4169E1")
 LightSeaGreenColor = utils.get_color_from_hex("#20B2AA")
@@ -66,42 +70,28 @@ class NavigationDrawer(MDNavigationDrawer):
     def update_status(self, *_):
         if self.state == "close" and self.open_progress == 0.0:
             App.get_running_app().number_generator.set_options()
-            # Window.release_all_keyboards()
-
         super().update_status(*_)
 
 
-class ItemList(BaseListItem):
-    def __init__(self, option, lb_text, **kwargs):
+class ItemFieldList(BoxLayout):
+    def __init__(self, name, option, field_label_text, **kwargs):
         super().__init__(**kwargs)
-        self.size_hint = 1, None
-        self.height = 70
 
-        self.lb = MDLabel()
-        # self.lb.height = 70
-        self.lb.halign = "left"
-        self.lb.text = lb_text
-        self.lb.pos_hint = {"y": -0.1, "x": 0.05}
-
-        self.option_field = MDTextField()
-        self.option_field.text = str(option)
-        # self.option_field.height = 70
-        self.option_field.size_hint = 0.15, None
-        self.option_field.pos_hint = {"y": 0.00, "center_x": .65}
-
-        self.add_widget(self.lb)
-        self.add_widget(self.option_field)
+        self.item_field = self.ids.item_field
+        self.item_field_label= self.ids.item_field_label
+        self.item_field.name = name
+        self.ids.item_field_label.text = field_label_text
+        self.item_field.text = option
 
 
 class ContentNavigationDrawer(BoxLayout):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.scroll = ScrollView()
-        self.add_widget(self.scroll)
-        self.mdlist = MDList()
-        self.scroll.add_widget(self.mdlist)
 
+
+    def close_driver(self, v):
+        self.parent.set_state("close")
 
 class NumberGenerator(Screen):
     nav_drawer = ObjectProperty()
@@ -109,6 +99,7 @@ class NumberGenerator(Screen):
     generator_label = ObjectProperty()
     generator_field = ObjectProperty()
     bottom_scroll = ObjectProperty()
+    box_content = ObjectProperty()
 
     def __init__(self, random_generator_core, stored_data, **kw):
         super().__init__(**kw)
@@ -127,9 +118,10 @@ class NumberGenerator(Screen):
         self.label_random_text = ''
         self.start = False
         self.current_simbol = None
+
         self._init_option()
         self._init_num_grid()
-        self.update_font_fields()
+        # self.update_font_fields()
 
 
         self.random_generator_core = random_generator_core
@@ -164,7 +156,8 @@ class NumberGenerator(Screen):
         if self.current_simbol == "<":
             if self.tex_field:
                 self.tex_field.pop()
-                self.ids.generator_label.text = ""
+                if not self.tex_field_blocked_blocked:
+                    self.ids.generator_label.text = ""
                 self.ids.generator_label.line_color_normal = 0.7, .7, .7, .4
         elif self.current_simbol == "?":
             if self.label_random_text:
@@ -177,6 +170,10 @@ class NumberGenerator(Screen):
 
         elif self.current_simbol == "B":
             self.tex_field_blocked_blocked = not self.tex_field_blocked_blocked
+            if self.tex_field_blocked_blocked:
+                self.ids.generator_label.text = self.label_random_text
+            else:
+                self.ids.generator_label.text = ""
         elif self.current_simbol == "C":
             self.clean_text_field()
         elif not self.tex_field_blocked:
@@ -194,6 +191,7 @@ class NumberGenerator(Screen):
     def clean_text_field(self):
         self.tex_field.clear()
         self.ids.generator_field.text = ""
+        self.ids.generator_label.line_color_normal = 0.7, .7, .7, .4
 
     def on_finish(self):
         if len(self.ids.generator_field.text) >= len(self.current_random):
@@ -227,21 +225,73 @@ class NumberGenerator(Screen):
 
     def set_options(self):
         for k, item in self.options.items():
-            self._options[k] = item.option_field.text
+            self._options[k] = item.item_field.text
         self.update_font_fields()
 
     def _init_option(self):
-        options_list = [("начало", "start"), ("конец", "end"), ("колличество", "count"),
-                        ("разделитель", "sep"), ("размер шрифта", "font_size")]
+        options_list = [("начало", "start", "int"), ("конец", "end", "int"), ("колличество", "count", "int"),
+                        ("разделитель", "sep", None), ("размер шрифта", "font_size", "int")]
         self.options = {}
 
-        for name, opt in options_list:
+        for name, opt, *flag in options_list:
+            filter = flag[0]
             v = self._options[opt]
             if v.endswith("sp"):
                 v = v.replace('sp', '')
-            self.options[opt] = ItemList(v, lb_text=name)
-            self.content_navigation.mdlist.add_widget(self.options[opt])
-        # self.content_navigation.mdlist.add_widget(Label())
+            self.options[opt] = ItemFieldList(opt, v, name)
+            self.options[opt].item_field.bind(text=self.on_text)
+            if filter:
+                self.options[opt].input_filter = filter
+            self.box_content.add_widget(self.options[opt])
+        strech = MDLabel()
+        # strech.text = "sdgfaerg \nsdefawef"
+        strech.size_hint = 1, 0.1
+        self.box_content.add_widget(strech)
+
+        close_box = FloatLayout()
+        close_box.size_hint = 1, 0.1
+        self.box_content.add_widget(close_box)
+        close = MDIconButton(on_press=self.content_navigation.close_driver)
+        close.pos_hint = {"x": 0.8, "bottom": 0.3}
+        close.icon = "close"
+        close.user_font_size = "18sp"
+        close_box.add_widget(close)
+
+
+    def on_text(self, *args):
+        self.valid_text(*args)
+
+    def valid_text(self, opt, val):
+        print(opt.name, val)
+        start = self.options["start"].item_field.text
+        end = self.options["end"].item_field.text
+        count = self.options["count"].item_field.text
+        if opt.name == "end":
+
+            if not val or int(val) <= int(start):
+                self.options["end"].item_field_label.text_color = 1, 0,0,1
+                self.options["end"].item_field_label.text = "конец" + " > начало"
+            else:
+                self.options["end"].item_field_label.text_color = 0.7, 0.7, 0.7, 1
+                self.options["end"].item_field_label.text = "конец"
+                self.options["start"].item_field_label.text_color = 0.7, 0.7, 0.7, 1
+                self.options["start"].item_field_label.text = "начало"
+        elif opt.name == "start":
+            if not val or int(val) >= int(end):
+                self.options["start"].item_field_label.text_color = 1, 0,0,1
+                self.options["start"].item_field_label.text = "начало" + " < конец"
+            else:
+                self.options["start"].item_field_label.text_color = 0.7, 0.7, 0.7, 1
+                self.options["start"].item_field_label.text = "начало"
+                self.options["end"].item_field_label.text_color = 0.7, 0.7, 0.7, 1
+                self.options["end"].item_field_label.text = "конец"
+        elif opt.name == "count":
+            if not val or int(val) <= 0:
+                self.options["count"].item_field_label.text_color = 1, 0,0,1
+                self.options["count"].item_field_label.text = "количество" + " > 0"
+            else:
+                self.options["count"].item_field_label.text_color = 0.7, 0.7, 0.7, 1
+                self.options["count"].item_field_label.text = "количество"
 
     def generate(self):
             if self.valid_value(self._options["start"],  self._options["end"], self._options["count"]):
